@@ -5,6 +5,7 @@ import DashBoard from '@/views/Admin/DashBoard.vue'
 import AdminSummary from '@/views/Admin/AdminSummary.vue'
 import ServicePage from '@/views/Admin/ServicePage.vue'
 import ProfessionalRequest from '@/views/Admin/ProfessionalRequest.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

@@ -7,7 +7,8 @@ export default {
         professionals:[],
         professional_count:0,
         professional_request:[],
-        professional_request_count:0
+        professional_request_count:0,
+        searchQuery:''
         },
     mutations:{
         SET_PROFESSIONAL(state,professionals){
@@ -21,6 +22,9 @@ export default {
         },
         SET_PROFESSIONAL_REQUEST_COUNT(state,professional_request_count){
             state.professional_request_count=professional_request_count
+        },
+        SET_SEARCH_QUERY(state,searchQuery){
+            state.searchQuery=searchQuery
         }
     },
     actions:{
@@ -48,5 +52,24 @@ export default {
                 console.error(error)
             }
         }
+    },
+    getters:{
+        filteredData: (state) => (viewType) => {
+            if (!state.searchQuery) {
+              return viewType === "professionals" ? state.professionals : state.professional_request;
+            }
+      
+            return viewType === "professionals"
+              ? state.professionals.filter((professional) =>
+                professional.name.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+                professional.profession.toLowerCase().includes(state.searchQuery.toLowerCase()) || 
+                String(professional.pincode).includes(state.searchQuery))
+                
+                : state.professional_request.filter((request) =>
+                    request.name.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+                    request.profession.toLowerCase().includes(state.searchQuery.toLowerCase()) || 
+                    String(request.pincode).includes(state.searchQuery) //
+                );
+          }
     }
 }

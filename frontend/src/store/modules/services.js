@@ -5,7 +5,8 @@ export default {
 
     state:{
         services:[],
-        serviceCount:0
+        serviceCount:0,
+        searchQuery:''
     },
     mutations: {
         SET_SERVICES(state,services) {
@@ -13,6 +14,9 @@ export default {
         },
         SET_SERVICECOUNT(state,count){
             state.serviceCount=count
+        },
+        SET_SEARCH_QUERY(state,searchQuery){
+            state.searchQuery=searchQuery
         }
     },
     actions : {
@@ -37,5 +41,13 @@ export default {
                 console.error(error)
             }
         }
+    },
+    getters:{
+        filterservices(state){
+            if(!state.searchQuery) return state.services;
+            return state.services.filter(service=>
+                service.servicename.toLowerCase().includes(state.searchQuery.toLowerCase()))
+        }
+
     }
 }

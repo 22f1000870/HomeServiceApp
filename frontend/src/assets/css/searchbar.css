@@ -1,0 +1,26 @@
+
+.input-text {
+    border: 1px solid #ff758c;
+    outline: none;
+    box-shadow: none; /* Removes Bootstrap default shadow */
+}
+
+.search-btn {
+    border: 1px solid #ff758c;
+    background-color: white;
+    transition: background 0.3s, color 0.3s;
+}
+
+.search-btn:hover {
+    background-color: #ff758c; /* Pink background on hover */
+    color: white;
+}
+
+.search-icon {
+    color: black;
+    transition: color 0.3s;
+}
+
+.search-btn:hover .search-icon {
+    color: white;
+}

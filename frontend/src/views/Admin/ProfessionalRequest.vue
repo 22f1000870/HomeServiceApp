@@ -5,8 +5,9 @@ import { computed,ref,watch} from 'vue';
 import { useStore } from 'vuex';
 import { handleTokenRefresh } from '@/utility/refreshtoken';
 import SuccessRegister from '@/components/popup/SuccessRegister.vue';
+import SearchBar from '@/components/searchbar/SearchBar.vue';
 const store = useStore();
-const professional_request = computed(()=> store.state.professionals.professional_request)
+const professional_request = computed(()=> store.getters['professionals/filteredData']('professionals_request'))
 const create=ref(null)
 const message=ref('')
 const reject= async (username)=>{
@@ -66,11 +67,14 @@ watch(create, (newValue) => {
     }, 4000)
   }
 })
+
 </script>
 
 
 <template>
     <div><NavBar></NavBar></div>
+
+    <div><SearchBar module="professionals"></SearchBar></div>
 
     <div class="container mt-5">
     <h2 class="text-center mb-4 text-dark fw-bold">Professional Request</h2>

@@ -2,16 +2,23 @@
 import NavBar from '@/components/navbar/NavBar.vue';
 import { computed} from 'vue';
 import { useStore } from 'vuex';
-
+import SearchBar from '@/components/searchbar/SearchBar.vue';
 const store = useStore();
-const services = computed(()=> store.state.services.services)
+
+
+// Correct way to use getters from Vuex
+const services = computed(() => store.getters["services/filterservices"]);
+
 </script>
 
 
 <template>
     <div><NavBar></NavBar></div>
 
-    <div class="container mt-5">
+    <div><SearchBar module="services"></SearchBar></div>
+
+
+    <div class="container mt-3">
     <h2 class="text-center mb-4 text-dark fw-bold">Services</h2>
     
     <div class="table-responsive">
@@ -44,7 +51,9 @@ const services = computed(()=> store.state.services.services)
 </div>
 </template>
 
-<style>
+<style scoped>
+@import '/src/assets/css/searchbar.css';
+
 .table thead th {
     background: linear-gradient(135deg, #ff758c, #ff7eb3);
     color: white;
@@ -60,5 +69,7 @@ const services = computed(()=> store.state.services.services)
     border-radius: 10px;
     object-fit: cover;
 }
+
+
 </style>
 
