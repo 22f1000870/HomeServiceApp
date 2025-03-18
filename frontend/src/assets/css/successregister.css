@@ -1,0 +1,22 @@
+.alert {
+    position: fixed;
+    top: 20px; /* Distance from the top */
+    right: 20px; /* Distance from the right */
+    z-index: 1050; /* Ensure it appears above other elements */
+    width: 300px; /* Adjust width as needed */
+    height: 80px;
+    padding: 10px;
+    font-size: 1 rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align content horizontally */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+     /* Success green background */
+    border: 1px solid #c3e6cb; /* Success green border */ /* Success green text */
+}
+.alert svg {
+    margin-right: 8px; /* Adjust spacing between the icon and text */
+    width: 20px; /* Smaller icon */
+    height: 20px; /* Smaller icon */
+}
