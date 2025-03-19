@@ -5,4 +5,5 @@ class Customer(db.Model):
     id=db.Column(db.Integer,db.ForeignKey('users.id'),primary_key=True)
     name=db.Column(db.String,nullable=False)
     pincode=db.Column(db.Integer,nullable=False)
-    image=db.Column(db.String)
+    image_url=db.Column(db.String)
+    email=db.Column(db.String)

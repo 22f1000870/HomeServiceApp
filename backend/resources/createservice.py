@@ -16,23 +16,28 @@ class CreateService(MethodView):
     @jwt_required()
     @access_allowed('Admin')
     def post(self):
-        servicedata = {
-            'servicename':request.form.get('servicename'),
-            'profession':request.form.get('profession'),
-            'base_price':request.form.get('base_price'),
-            'image':request.form.get('image')
-        }
-        
-        # print("Request headers:", request.headers)
-    
-        if not servicedata:
-            return {"message": "No service data provided"}, 400
-
         # try:
         #     service_data = json.loads(servicedata)  # Parse JSON string
         #     print(service_data)
         # except json.JSONDecodeError:
         #     return {"message": "Invalid JSON payload"}, 400
+
+        
+        # Handle file upload
+        image = request.files.get('file')
+        if not image:
+            return {"message": "No image file provided"}, 400
+
+        upload_folder = os.path.join(current_app.static_folder,'service')
+        filename = secure_filename(image.filename)
+        filepath = os.path.join(upload_folder, filename)
+        image.save(filepath)
+        servicedata = {
+            'servicename':request.form.get('servicename'),
+            'profession':request.form.get('profession'),
+            'base_price':request.form.get('base_price'),
+            'image_url':f"{request.host_url}static/service/{filename}"
+        }
 
         #Validate payload using Marshmallow schema
         schema = ServiceRegisterSchema()
@@ -43,15 +48,6 @@ class CreateService(MethodView):
             print(service_data)
             return {"message": e.messages}, 422
 
-        # Handle file upload
-        image = request.files.get('file')
-        if not image:
-            return {"message": "No image file provided"}, 400
-
-        upload_folder = os.path.join(current_app.static_folder,'service')
-        filename = secure_filename(image.filename)
-        filepath = os.path.join(upload_folder, filename)
-        image.save(filepath)
 
         # Check if service already exists
         exists = Service.query.filter_by(servicename=service_data['servicename']).first()
@@ -64,7 +60,7 @@ class CreateService(MethodView):
                 servicename=service_data['servicename'],
                 profession=service_data['profession'],
                 base_price=service_data['base_price'],
-                image=filename  # Save the filename
+                image_url=service_data['image_url']
             )
             db.session.add(service)
             db.session.commit()
@@ -82,7 +78,39 @@ class GetService(MethodView):
         services=Service.query.all()
         service_schema=ServiceRegisterSchema(many=True)
         service=service_schema.dump(services)
-        for ser in service:
-            ser['image_url'] = f"{request.host_url}static/service/{ser['image']}"
+        
         print(service)
         return jsonify({'servicecount':servicecount,'services':service}),200
+
+@blp.route('/updateservice')
+class UpdateService(MethodView):
+    @jwt_required()
+    @access_allowed('Admin')
+    def put(self):
+        try:
+            payload = request.get_json()  # Get JSON payload
+            print(payload)
+
+            if not payload:
+                return jsonify({'message': 'Invalid payload'}), 400
+
+            service_id = payload.get('service_id')
+            print(service_id)
+            service_name = payload.get('servicename')
+            profession = payload.get('profession')
+            base_price = payload.get('base_price')
+            image_url = payload.get('image_url')
+
+            service = Service.query.get(service_id)
+            if service:
+                service.servicename = service_name
+                service.profession = profession
+                service.base_price = base_price
+                service.image_url = image_url
+                db.session.commit()
+                return jsonify({'message': 'Service updated successfully'}), 201
+            else:
+                return jsonify({'message': 'Service not found'}), 404
+
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500

@@ -17,6 +17,7 @@ const store = useStore()
 const profession = computed(()=> store.state.profInfo.professions)
 const create=ref(null)
 const message=ref('')
+const email=ref('')
 
 const professions = async () => {
   try {
@@ -50,7 +51,7 @@ const CustomerCreate = async () => {
     formData.append('name',fullname.value)
     formData.append('pincode',pincode.value)
     formData.append('image',fileName.value)
-
+    formData.append('email',email.value)
     try {
       const response= await axios.post('http://127.0.0.1:5000/createcustomer',formData)
       if(response.status===201){
@@ -68,6 +69,7 @@ const CustomerCreate = async () => {
       pincode.value=0
       fileName.value=''
       fullname.value=''
+      email.value=''
       
     }
 
@@ -257,7 +259,10 @@ const login = async () => {
                                     <label for="registerCode" class="form-label">Pincode</label>
                                     <input v-model="pincode" type="number" class="form-control" id="registerCode" required>
                                   </div>
-
+                                  <div class="mb-3">
+                                    <label for="registerEmail" class="form-label">Email</label>
+                                    <input v-model="email" type="email" class="form-control" id="registerEmail" required>
+                                  </div>
                                   <button type="submit" class="btn btn-success w-100">Register</button>
                                 </form>
                               </div>
